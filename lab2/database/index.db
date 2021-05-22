@@ -1,0 +1,159 @@
+DROP TABLE IF EXISTS storage;
+DROP TABLE IF EXISTS borrow_book;
+DROP TABLE IF EXISTS bookshelf;
+DROP TABLE IF EXISTS return_book;
+DROP TABLE IF EXISTS add_book;
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS book_type;
+DROP TABLE IF EXISTS add_student;
+DROP TABLE IF EXISTS admin;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS student;
+
+CREATE TABLE book_type(
+    id int not null ,
+    name text not null ,
+    primary key (id)
+);
+
+
+CREATE TABLE bookshelf(
+    number varchar(15) NOT NULL ,
+    capacity int NOT NULL ,
+    PRIMARY KEY (number)
+);
+
+CREATE TABLE book(
+    id varchar(15) NOT NULL ,
+    title text,
+    author text,
+    type int,
+    publisher text,
+    description text ,
+    PRIMARY KEY (id),
+    FOREIGN KEY (type) REFERENCES book_type(id)
+);
+
+CREATE TABLE admin(
+    username varchar(15) NOT NULL ,
+    password varchar(100) NOT NULL ,
+    PRIMARY KEY(username)
+);
+
+
+CREATE TABLE student(
+    id varchar(15) ,
+    name varchar(10) ,
+    gender varchar(1),
+    age int,
+    department varchar(20),
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE user(
+    username varchar(15) NOT NULL ,
+    password varchar(100) ,
+    id varchar(15),
+    PRIMARY KEY (username),
+    FOREIGN KEY (id) REFERENCES student(id)
+);
+
+
+
+CREATE TABLE storage(
+    book varchar(15) NOT NULL ,
+    bookshelf varchar(15) NOT NULL ,
+    num int UNSIGNED NOT NULL ,
+    PRIMARY KEY (book,bookshelf),
+    FOREIGN KEY (book) REFERENCES book(id),
+    FOREIGN KEY (bookshelf) REFERENCES bookshelf(number)
+);
+
+CREATE TABLE borrow_book(
+    id int NOT NULL AUTO_INCREMENT,
+    user varchar(15) NOT NULL ,
+    book varchar(15) NOT NULL ,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user) REFERENCES user(username),
+    FOREIGN KEY (book) REFERENCES book(id)
+);
+
+CREATE TABLE return_book(
+    id int NOT NULL AUTO_INCREMENT,
+    user varchar(15) NOT NULL ,
+    book varchar(15) NOT NULL ,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user) REFERENCES user(username),
+    FOREIGN KEY (book) REFERENCES book(id)
+);
+
+CREATE TABLE add_book(
+    id int NOT NULL AUTO_INCREMENT,
+    admin varchar(15) NOT NULL ,
+    book varchar(15) NOT NULL ,
+    PRIMARY KEY (id),
+    FOREIGN KEY (admin) REFERENCES admin(username),
+    FOREIGN KEY (book) REFERENCES book(id)
+);
+
+CREATE TABLE add_student(
+    id int NOT NULL AUTO_INCREMENT,
+    admin varchar(15) NOT NULL ,
+    student varchar(15) NOT NULL ,
+    PRIMARY KEY (id),
+    FOREIGN KEY (admin) REFERENCES admin(username),
+    FOREIGN KEY (student) REFERENCES student(id)
+);
+
+
+
+INSERT INTO student(id, name, gender, age, department)  VALUES  ('1181000420','王五','男',18,'计算机科学与技术系');
+INSERT INTO student(id, name, gender, age, department)  VALUES  ('1181000310','张三','男',20,'数学系');
+INSERT INTO student(id, name, gender, age, department)  VALUES  ('1171000521','李莉','女',21,'物理系');
+
+
+INSERT INTO book_type(id, name) VALUES (0,'外国名著');
+INSERT INTO book_type(id, name) VALUES (1,'科幻科普');
+INSERT INTO book_type(id, name) VALUES (2,'经典名著');
+INSERT INTO book_type(id, name) VALUES (3,'现代长篇');
+
+INSERT INTO book(id, title, author, type, publisher, description) VALUES ('9787544299114','百年孤独','马尔克斯',0,'南海出版公司','本书是魔幻现实主义文学的代表作,描写了布恩迪亚家族七代人的传奇故事,以及加勒比海沿岸小镇马孔多的百年兴衰,反映了拉丁美洲一个世纪以来风云变幻的历史.作品融入神话传说,民间故事等因素,巧妙地糅合了现实与虚幻,展现出一个瑰丽的想象世界,成为20世纪重要的经典文学巨著.');
+INSERT INTO book(id, title, author, type, publisher, description) VALUES ('9787544242516','白夜行','东野圭吾',0,'南海出版公司','“我的天空里没有太阳,总是黑夜,但并不暗,因为有东西代替了太阳。虽然没有太阳那么明亮,但对我来说已经足够。凭借着这份光,我便能把黑夜当成白天。我从来就没有太阳,所以不怕失去”.');
+INSERT INTO book(id, title, author, type, publisher, description) VALUES ('9787532125944','活着','马尔克斯',0,'上海文艺出版社','本书为长篇小说。通过富家出身的富贵苦难而动荡的一生,说明了人是为了活着本身,而不是为了活着之外的任何事物而活着.');
+INSERT INTO book(id, title, author, type, publisher, description) VALUES ('9787206047992','红楼梦','曹雪芹',0,'吉林人民出版社','本书是我国四大古典名著之一,以贾宝玉、林黛玉、薛宝钗的爱情纠葛为线索,以贾、史、王、薛四大家族为中心,以清朝封建社会为背景,写出了封建大家族的兴衰,同时也折射出我国封建社会兴衰的历史.');
+INSERT INTO book(id, title, author, type, publisher, description) VALUES ('9787535735508','时间简史','霍金',0,'湖南科学技术出版社','本书内容包括: 我们的宇宙图象, 空间和时间, 膨胀的宇宙, 基本粒子和自然的力, 黑洞, 时间箭头, 物理学的统一等.');
+
+
+
+INSERT INTO user (username, password, id) VALUES ('wkj9893','wkj9893','1181000420');
+INSERT INTO user (username, password, id) VALUES ('test9893','wkj9893','1181000310');
+INSERT INTO user (username, password, id) VALUES ('aaaa','wkj9893','1171000521');
+
+
+INSERT INTO admin(username, password) VALUES ('wkj','wkj');
+INSERT INTO admin(username, password) VALUES ('admin','admin');
+
+INSERT INTO bookshelf(number, capacity) VALUES ('01',100);
+INSERT INTO bookshelf(number, capacity) VALUES ('02',150);
+INSERT INTO bookshelf(number, capacity) VALUES ('03',200);
+
+INSERT INTO storage(book, bookshelf, num) VALUES ('9787544299114','01',3);
+INSERT INTO storage(book, bookshelf, num) VALUES ('9787544242516','02',1);
+INSERT INTO storage(book, bookshelf, num) VALUES ('9787532125944','03',2);
+INSERT INTO storage(book, bookshelf, num) VALUES ('9787206047992','01',3);
+INSERT INTO storage(book, bookshelf, num) VALUES ('9787535735508','02',1);
+
+
+
+INSERT INTO borrow_book(user, book) VALUES ('wkj9893','9787206047992');
+
+INSERT INTO return_book(user, book) VALUES ('wkj9893','9787206047992')
+
+UPDATE storage SET num = num - 1 WHERE book = '9787544299114'
+
+INSERT INTO return_book VALUES ('wkj9893','9787206047992')
+
+
+
+CREATE VIEW users AS SELECT * FROM user;

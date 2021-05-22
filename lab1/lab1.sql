@@ -1,0 +1,28 @@
+CREATE TABLE Student(
+    'S#' VARCHAR(8) NOT NULL ,
+    SNAME VARCHAR(10) NOT NULL ,
+    SEX VARCHAR(2) ,
+    AGE INT ,
+    DNAME VARCHAR(10),
+    CLASS VARCHAR(6),
+    PRIMARY KEY (`S#`)
+);
+
+
+CREATE TABLE Course(
+    'C#' VARCHAR(3) NOT NULL ,
+    CNAME VARCHAR(12) ,
+    HOURS INT ,
+    CREDIT FLOAT ,
+    SEMSTER INT ,
+    PRIMARY KEY (`C#`)
+);
+
+CREATE TABLE SC(
+    `S#` VARCHAR(8) NOT NULL  ,
+    `C#` VARCHAR(3) NOT NULL ,
+    SCORE FLOAT ,
+    PRIMARY KEY (`S#`,`C#`),
+    FOREIGN KEY (`S#`) REFERENCES Student(`S#`),
+    FOREIGN KEY  (`C#`) REFERENCES  Course(`C#`)
+)
